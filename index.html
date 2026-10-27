@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1746a2">
+<title>RHEMA TEREFE Education</title>
+<style>
+body{font-family:Arial,sans-serif;margin:0;background:#f2f5fb;color:#18243a}
+header{background:#1746a2;color:white;padding:25px;text-align:center}
+main{max-width:700px;margin:auto;padding:16px}
+.card{background:white;padding:18px;margin:14px 0;border-radius:14px;box-shadow:0 2px 10px #0001}
+button{padding:12px;border:0;border-radius:9px;background:#1746a2;color:white;margin:4px;cursor:pointer}
+input,textarea{box-sizing:border-box;width:100%;padding:12px;margin:8px 0;border:1px solid #bbb;border-radius:8px;font:inherit}
+.grades{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grades button{padding:20px}
+</style>
+</head>
+<body>
+<header>
+<h1>RHEMA TEREFE Education</h1>
+<p>Learn • Practice • Achieve</p>
+<p>Grades 9, 10, 11 and 12</p>
+</header>
+<main>
+<section class="card">
+<h2>Choose Your Grade</h2>
+<div class="grades">
+<button onclick="choose(9)">Grade 9</button>
+<button onclick="choose(10)">Grade 10</button>
+<button onclick="choose(11)">Grade 11</button>
+<button onclick="choose(12)">Grade 12</button>
+</div>
+<p id="selected">Welcome! Choose your grade.</p>
+</section>
+<section class="card">
+<h2>Study Subjects</h2>
+<div id="subjects">
+<button onclick="subject('Mathematics')">Mathematics</button>
+<button onclick="subject('English')">English</button>
+<button onclick="subject('Biology')">Biology</button>
+<button onclick="subject('Chemistry')">Chemistry</button>
+<button onclick="subject('Physics')">Physics</button>
+<button onclick="subject('Civics')">Civics</button>
+</div>
+</section>
+<section class="card">
+<h2>My Study Notes</h2>
+<input id="title" placeholder="Note title">
+<textarea id="note" rows="5" placeholder="Write your study notes here..."></textarea>
+<button onclick="saveNote()">Save Note</button>
+<p id="status"></p>
+<div id="notes"></div>
+</section>
+<section class="card">
+<h2>Keep Learning!</h2>
+<p>Choose a grade, select a subject and write your own study notes.</p>
+<p>More learning resources can be added later.</p>
+</section>
+</main>
+<script>
+function choose(g){
+document.getElementById('selected').textContent='You selected Grade '+g+'. Choose a subject to study.';
+}
+function subject(s){
+document.getElementById('title').value=s+' study note';
+document.getElementById('note').focus();
+}
+function getNotes(){
+try{return JSON.parse(localStorage.getItem('rhemaNotes')||'[]')}catch(e){return []}
+}
+function saveNote(){
+let t=document.getElementById('title').value.trim();
+let n=document.getElementById('note').value.trim();
+if(!n){document.getElementById('status').textContent='Write a note first.';return}
+let a=getNotes();a.unshift({title:t||'Study note',text:n});
+localStorage.setItem('rhemaNotes',JSON.stringify(a));
+document.getElementById('note').value='';
+document.getElementById('status').textContent='Note saved on this device!';
+showNotes();
+}
+function showNotes(){
+let root=document.getElementById('notes');root.innerHTML='';
+getNotes().forEach((n,i)=>{
+let box=document.createElement('div');box.className='card';
+let h=document.createElement('h3');h.textContent=n.title;
+let p=document.createElement('p');p.textContent=n.text;
+let b=document.createElement('button');b.textContent='Delete';
+b.onclick=()=>{let a=getNotes();a.splice(i,1);localStorage.setItem('rhemaNotes',JSON.stringify(a));showNotes()};
+box.append(h,p,b);root.append(box);
+});
+}
+showNotes();
+</script>
+</body>
+  </html>
+                                                                            
